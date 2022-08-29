@@ -3,7 +3,8 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 
 const util = require('node:util');
 const exec = util.promisify(require('node:child_process').exec);
-
+//import configJson from ',,/../../../../config.json';
+import config from '../config.json';
 //docker stop trusting_burnell || true && docker rm trusting_burnell || true
 
 async function getRunningInfo() {
@@ -40,31 +41,37 @@ async function getRunningInfo() {
 
 async function getNextPorts(){
   const { occupiedPorts } = await getRunningInfo()
-  return occupiedPorts.length != 0 ? [occupiedPorts[occupiedPorts.length - 1][0] + 1, occupiedPorts[occupiedPorts.length - 1][1] + 1] : [8080, 8081]
+  return occupiedPorts.length != 0 ? [occupiedPorts[occupiedPorts.length - 1][0] + 1, occupiedPorts[occupiedPorts.length - 1][1] + 1] : [config.startPort_1, config.startPort_2]
 }
 
-async function spawnNewContainer(ports: any, tries?: number): Promise<String> {
-  console.log(ports, tries)
+async function startTimer(id: any){
+  setTimeout(async () => {
+    await exec(`docker stop ${id} || true && docker rm ${id} || true`);
+  } , 1000*60*config.timeout)
+}
+
+async function spawnNewContainer(ports: any, tries?: number): Promise<any> {
   try {
-    let { stdout } = await exec(`docker run --name ajan-service -d -p ${ports[0]}:8080 -p ${ports[1]}:8090 aantakli/ajan-service:latest`);
+    let { stdout } = await exec(`docker run -d -p ${ports[0]}:8080 -p ${ports[1]}:8090 aantakli/ajan-service:latest`);
     stdout = stdout.replace("\n", '').substring(0, 11)
-    return stdout
+    return {statuscode: 200, id: stdout}
   } catch (e: any) {
-    console.log(e)
     if(e.stderr.includes('port is already allocated')) {
       let id = e.stderr.match(/[a-z]*_[a-z]*/)[0];
       id.replace("\n", '').substring(0, 11)
-      console.log(id)
-      if(tries === undefined) {
-        await exec(`docker stop ${id} || true && docker rm ${id} || true`);
-        return await spawnNewContainer(await getNextPorts(), 1)
-      } else if(tries !== 1) {
+      if(tries  !== undefined) {
+        if(tries >= 10){
+          return {statuscode: 500, error: 'Too many tries'}
+        }
         await exec(`docker stop ${id} || true && docker rm ${id} || true`);
         return await spawnNewContainer(await getNextPorts(), tries + 1)
+      } else {
+        await exec(`docker stop ${id} || true && docker rm ${id} || true`);
+        return await spawnNewContainer(await getNextPorts(), 1)
       }
     }
   }
-    return 'error'
+  return {statuscode: 500, message: 'Something went wrong'}
 }
 
 
@@ -73,8 +80,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let ports = await getNextPorts()
-  console.log(ports)
   let data  = await spawnNewContainer(ports)
-  console.log(data)
-  res.status(200).json(data)
+  if(data.statuscode === 200){
+    startTimer(data.id).then(r => {})
+  }
+  res.status(data.statuscode).json(data)
 }

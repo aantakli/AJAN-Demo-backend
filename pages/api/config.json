@@ -1,0 +1,5 @@
+{
+  "timeout": 30,
+  "startPort_1": "8000",
+  "startPort_2": "8100"
+}
