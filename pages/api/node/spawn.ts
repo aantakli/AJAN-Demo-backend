@@ -40,17 +40,20 @@ async function getRunningInfo() {
 
 async function getNextPorts(){
   const { occupiedPorts } = await getRunningInfo()
-  return [occupiedPorts[occupiedPorts.length - 1][0] + 1, occupiedPorts[occupiedPorts.length - 1][1] + 1]
+  return occupiedPorts.length != 0 ? [occupiedPorts[occupiedPorts.length - 1][0] + 1, occupiedPorts[occupiedPorts.length - 1][1] + 1] : [8080, 8081]
 }
 
 async function spawnNewContainer(ports: any, tries?: number): Promise<String> {
   console.log(ports, tries)
   try {
-    const { stdout } = await exec(`docker run -d -p ${ports[0]}:8080 -p ${ports[1]}:8090 ajan:latest`);
+    let { stdout } = await exec(`docker run --name ajan-service -d -p ${ports[0]}:8080 -p ${ports[1]}:8090 aantakli/ajan-service:latest`);
+    stdout = stdout.replace("\n", '').substring(0, 11)
     return stdout
   } catch (e: any) {
+    console.log(e)
     if(e.stderr.includes('port is already allocated')) {
-      const id = e.stderr.match(/[a-z]*_[a-z]*/)[0];
+      let id = e.stderr.match(/[a-z]*_[a-z]*/)[0];
+      id.replace("\n", '').substring(0, 11)
       console.log(id)
       if(tries === undefined) {
         await exec(`docker stop ${id} || true && docker rm ${id} || true`);
@@ -70,7 +73,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let ports = await getNextPorts()
+  console.log(ports)
   let data  = await spawnNewContainer(ports)
-  //console.log(data)
+  console.log(data)
   res.status(200).json(data)
 }
