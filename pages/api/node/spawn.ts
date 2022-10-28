@@ -54,7 +54,7 @@ async function spawnNewContainer(ports: any, tries?: number): Promise<any> {
   try {
     let { stdout } = await exec(`docker run -d -p ${ports[0]}:8080 -p ${ports[1]}:8090 aantakli/ajan-service:latest`);
     stdout = stdout.replace("\n", '').substring(0, 11)
-    return {statuscode: 200, id: stdout}
+    return {statuscode: 200, id: stdout, port: ports[1]}
   } catch (e: any) {
     if(e.stderr.includes('port is already allocated')) {
       let id = e.stderr.match(/[a-z]*_[a-z]*/)[0];
