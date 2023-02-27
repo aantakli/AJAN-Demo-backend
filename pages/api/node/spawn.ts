@@ -20,8 +20,10 @@ async function getRunningInfo() {
       let portsArr = infoArr[5].split(', ')
       let ports: any[] = []
       portsArr.forEach((portString: any) => {
-        const port = parseInt(portString.split("->")[0].split(":")[1])
-        ports.push(port)
+        if(portString[0] != ":") {
+          const port = parseInt(portString.split("->")[0].split(":")[1])
+          ports.push(port)
+        }
       })
       occupiedPorts.push(ports)
       let sData = {
@@ -56,6 +58,7 @@ async function spawnNewContainer(ports: any, tries?: number): Promise<any> {
     stdout = stdout.replace("\n", '').substring(0, 11)
     return {statuscode: 200, id: stdout, port: ports[1]}
   } catch (e: any) {
+    console.log(e)
     if(e.stderr.includes('port is already allocated')) {
       let id = e.stderr.match(/[a-z]*_[a-z]*/)[0];
       id.replace("\n", '').substring(0, 11)

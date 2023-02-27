@@ -65,4 +65,27 @@
     background-color: #181940;
     box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
   }
+  .messageContainer{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    .messageTip{
+      padding-top: 20px;
+      padding-bottom: 10px;
+      text-align: center;
+    }
+    .messageBox{
+      width: 60%;
+      height: 400px;
+      margin: auto;
+      border-radius: 20px;
+      border: solid black 2px;
+      .message{
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+  }
 }

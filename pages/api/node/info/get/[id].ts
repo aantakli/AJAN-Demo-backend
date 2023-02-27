@@ -1,10 +1,14 @@
-import axios from 'axios';
+import path from 'path';
+
+const fs = require('fs')
 
 export default (req: any, res: any) => {
 
 
   const { id } = req.query
   const { port } = req.query
+
+  const jsonPath = path.join(__dirname, '..', 'messages.json');
 
   res.writeHead(200, {
     "connection": "keep-alive",
@@ -20,8 +24,35 @@ export default (req: any, res: any) => {
     You can achieve this by calling res.flush() when you need the data written to
     actually make it to the client.
 */
+  // Data which will write in a file.
   setInterval(() => {
-    res.write(`data: ${id} ${port} \n\n`)
-    res.flush();
+    let data = 'null'
+    try {
+      try {
+        data = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+      } catch (e){
+        fs.writeFileSync(jsonPath, "{}", 'utf-8');
+      }
+      let string = ""
+      if(data != "null"){
+        try {
+          // @ts-ignore
+          data[id].forEach((message: any) => {
+            string += ", " + message
+          })
+          string = string.replace(", ", "")
+        } catch (e){
+          string = "null"
+        }
+      } else {
+        string = "null"
+      }
+      console.log("String", string)
+      res.write(`data: ${string} \n\n`)
+      res.flush();
+    } catch (e) {
+      console.log(e)
+      fs.writeFileSync(jsonPath, "{}", 'utf-8');
+    }
   }, 1000);
 };

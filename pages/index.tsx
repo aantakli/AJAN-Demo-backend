@@ -10,12 +10,21 @@ function Home(){
   const [url, setUrl] = useState("");
   const [id, setId] = useState("a");
   const [port, setPort] = useState("a");
+  const [messageList, setMessageList] = useState(["a", "b", "c"]);
 
   const subscribe = (endpoint: string) => {
     const events = new EventSource(`http://localhost:3000/api/node/info/get/${endpoint}?port=${port}`);
     events.onmessage = event => {
       if(event.type == 'message'){
-        console.log(event.data)
+        let readMessages = event.data.split(' ')
+        let messages:any = []
+        readMessages.forEach((message: any) => {
+          if(message != "null" && message != ""){
+            messages.push(message)
+          }
+        })
+        console.log(messages)
+        setMessageList(messages)
       }
     };
   };
@@ -39,10 +48,21 @@ function Home(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.info}>
-        {url != "" ? `Url: ${url}` : "No URL requested"}
+        {url != "" ? `Url: ${url}` : "No URL requested"}<br/>
+        {id != "a" ? `ID: ${id}` : "ID: ---"}
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
       {loading? getLoadingButton() : getUrlButton(load, id!="a")}
+
+      <div className={styles.messageContainer}>
+        <div className={styles.messageTip}>Messages from Plugin</div>
+        <div className={styles.messageBox}>
+          {messageList.map(message => (
+            // eslint-disable-next-line react/jsx-key
+            <div className={styles.message}>{message}</div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
