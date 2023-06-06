@@ -14,7 +14,7 @@
     left: 50%;
     transform: translateX(-50%);
   }
-  .requestButton{
+  .clickable{
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -40,52 +40,35 @@
     vertical-align: middle;
     white-space: nowrap;
   }
-  .requestButton:focus:not(:focus-visible):not(.focus-visible) {
+  .clickable:focus:not(:focus-visible):not(.focus-visible) {
     box-shadow: none;
     outline: none;
   }
 
-  .requestButton:hover {
+  a.clickable{
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .clickable:hover {
     background-color: #393b84;
   }
 
-  .requestButton:focus {
+  .clickable:focus {
     box-shadow: rgba(10, 11, 31, 0.4) 0 0 0 3px;
     outline: none;
   }
 
-  .requestButton:disabled {
-    background-color: #4e51d0;
+  .clickable:disabled {
+    background-color: #a5a5e3;
     border-color: rgba(27, 31, 35, .1);
     color: rgba(255, 255, 255, .8);
     cursor: default;
   }
 
-  .requestButton:active {
+  .clickable:active {
     background-color: #181940;
     box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
   }
-  .messageContainer{
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    padding-top: 20px;
-    padding-bottom: 20px;
-    .messageTip{
-      padding-top: 20px;
-      padding-bottom: 10px;
-      text-align: center;
-    }
-    .messageBox{
-      width: 60%;
-      height: 400px;
-      margin: auto;
-      border-radius: 20px;
-      border: solid black 2px;
-      .message{
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-    }
-  }
+
 }

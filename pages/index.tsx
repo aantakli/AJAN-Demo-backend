@@ -7,36 +7,49 @@ import axios from 'axios';
 function Home(){
 
   let [loading, setLoading] = useState(false);
-  const [url, setUrl] = useState("");
-  const [id, setId] = useState("a");
-  const [port, setPort] = useState("a");
-  const [messageList, setMessageList] = useState(["a", "b", "c"]);
+  const [port, setPort] = usePortStorage();
 
-  const subscribe = (endpoint: string) => {
-    const events = new EventSource(`http://localhost:3000/api/node/info/get/${endpoint}?port=${port}`);
-    events.onmessage = event => {
-      if(event.type == 'message'){
-        let readMessages = event.data.split(' ')
-        let messages:any = []
-        readMessages.forEach((message: any) => {
-          if(message != "null" && message != ""){
-            messages.push(message)
-          }
-        })
-        console.log(messages)
-        setMessageList(messages)
+
+  function usePortStorage() {
+    return useLocalStorage<Number>('port', -1);
+  }
+
+useEffect(() => {
+  if(port != -1){
+    axios.get(getURL(port)).then((res) => {}).catch((reason) =>{
+      if(reason.code == 'ERR_NETWORK'){
+        setPort(-1);
       }
-    };
-  };
+    })
+  }
+});
+
+  function useLocalStorage<T>(key: string, fallbackValue: T) {
+    const [value, setValue] = useState(fallbackValue);
+    useEffect(() => {
+      const stored = localStorage.getItem(key);
+      setValue(stored ? JSON.parse(stored) : fallbackValue);
+    }, [fallbackValue, key]);
+
+    useEffect(() => {
+      localStorage.setItem(key, JSON.stringify(value));
+    }, [key, value]);
+
+    return [value, setValue] as const;
+  }
+
+
+
+  useEffect(() =>{
+  })
 
   function load(){
     setLoading(true);
-    axios.get(`http://localhost:3000/api/node/spawn`).then((res) => {
-      setId(res.data.id);
-      setPort(res.data.port);
-      setUrl(`http://localhost:${res.data.port}/rdf4j/repositories/`);
-      subscribe(res.data.id);
-      setLoading(false);
+    axios.get(`/api/node/create`).then(async (res) => {
+      await new Promise(r => setTimeout(r, 20 * 1000)).then(() => {
+        setPort(res.data.workbench);
+        setLoading(false);
+      });
     });
   }
 
@@ -48,32 +61,35 @@ function Home(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.info}>
-        {url != "" ? `Url: ${url}` : "No URL requested"}<br/>
-        {id != "a" ? `ID: ${id}` : "ID: ---"}
+        {port!=-1 ? `Url: ${getURL(port)}` : "No URL requested"}<br/>
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
-      {loading? getLoadingButton() : getUrlButton(load, id!="a")}
+      {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
+      {port!=-1? getEditorButton(getDemoURL(port)) :  <></> }
 
-      <div className={styles.messageContainer}>
-        <div className={styles.messageTip}>Messages from Plugin</div>
-        <div className={styles.messageBox}>
-          {messageList.map(message => (
-            // eslint-disable-next-line react/jsx-key
-            <div className={styles.message}>{message}</div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
 
 
+function getURL(port: any){
+  return `${process.env.NEXT_PUBLIC_HOST}:${port}/rdf4j/repositories/`
+}
+
+function getDemoURL(port: any) {
+  return `${process.env.NEXT_PUBLIC_EDITOR_HOST}/home?name=demo&uri=${getURL(port)}`
+}
+
 function getLoadingButton(){
-  return <button className={styles.requestButton}>Loading...</button>
+  return <button disabled={true} className={styles.clickable}>Loading...</button>
 }
 
 function getUrlButton(load: any, known: boolean){
-  return <button onClick={load} disabled={known} className={styles.requestButton}>{known? "Requested!" : "Request new Instance"}</button>
+  return <button onClick={load} disabled={known} className={styles.clickable}>{known? "Requested!" : "Request new Instance"}</button>
+}
+
+function getEditorButton(url: string){
+  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Editor</a>
 }
 
 export default Home;
