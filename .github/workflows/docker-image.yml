@@ -6,22 +6,16 @@ on:
       - 'main'
 
 jobs:
-  build:
+  docker:
+    name: Create Dockerimage
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Get commit Hash
-        id: commit
-        uses: pr-mpt/actions-commit-hash@v1
-      -
-        name: Checkout
-        uses: actions/checkout@v2
       -
         name: Setup docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: aantakli/ajan-editor
+          images: aantakli/ajan-demo-backend
           tags: |
             type=raw,latest
             type=sha
