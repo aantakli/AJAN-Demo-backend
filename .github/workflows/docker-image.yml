@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  docker:
+  docker-build:
     name: Create Dockerimage
     runs-on: ubuntu-latest
     steps:
