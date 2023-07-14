@@ -46,7 +46,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
-  const portainer = new PortainerClient("https://demo.yannic-hock.de", "admin", "HtZ&2niMmvSW2o$a");
+  const portainer = new PortainerClient(process.env.NEXT_PUBLIC_PORTAINER_HOST, "admin", "HtZ&2niMmvSW2o$a");
 
   let ports: any[] = []
   let containerList: any[] = await getContainerData(portainer);
