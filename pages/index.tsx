@@ -77,8 +77,8 @@ useEffect(() => {
       <div className={styles.clickableContainer}>
         {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
         {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
+        {port!=-1 && env? getPacmanURL(getPacmanURL(env)) :  <></> }
       </div>
-
 
     </div>
   );
@@ -96,6 +96,9 @@ function getWorkbenchURL(env:any, port: any) {
   return `${env.BASE_URL}:${port}/workbench`
 }
 
+function getPacmanURL(env:any) {
+  return `${env.BASE_URL}:${env.PACMAN_PORT}/?uri=${env.BASE_URL}:${env.BACKEND_PORT}/api/pacman`
+}
 
 function getLoadingButton(){
   return <button disabled={true} className={styles.clickable}>Loading...</button>
@@ -110,6 +113,10 @@ function getEditorButton(url: string){
 }
 
 function getWorkbenchButton(url: string){
+  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Workbench</a>
+}
+
+function getPacmanButton(url: string){
   return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Workbench</a>
 }
 
