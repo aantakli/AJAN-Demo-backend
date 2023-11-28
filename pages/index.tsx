@@ -68,13 +68,19 @@ useEffect(() => {
         <meta name="description" content="AJAN Demo Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className={styles.demo}>DEMO</div>
       <div className={styles.info}>
-        {port!=-1 && env ? `Url: ${getURL(env, port)}` : "No URL requested"}<br/>
+        {port!=-1 && env ? `Url: ${getURL(env, port)}` : "No URL requested"}
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
       {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
       {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
       {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
+      <div className={styles.clickableContainer}>
+        {getEditorButton("test")}
+        {getWorkbenchButton("test")}
+      </div>
+
 
     </div>
   );
