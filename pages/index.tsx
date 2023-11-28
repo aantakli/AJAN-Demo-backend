@@ -2,27 +2,60 @@ import Head from 'next/head'
 import styles from '../styles/index.module.scss';
 import { useState, useEffect } from 'react'
 import axios from 'axios';
+import {func} from "prop-types";
 
 
 function Home(){
 
+  const [env, setEnv] = useState(null)
+  const [log, setLog] = useState("")
   let [loading, setLoading] = useState(false);
-  const [port, setPort] = usePortStorage();
+  const [storagePort, setStoragePort] = useStoragePort();
+  const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
+  const [containerID, setContainerID] = useContainerID();
 
 
-  function usePortStorage() {
-    return useLocalStorage<Number>('port', -1);
+  function useWorkbenchPort() {
+    return useLocalStorage<Number>('workbenchPort', -1);
+  }
+  function useStoragePort() {
+    return useLocalStorage<Number>('storagePort', -1);
+  }
+
+  function useContainerID() {
+    return useLocalStorage<String>('containerID', "");
   }
 
 useEffect(() => {
-  if(port != -1){
-    axios.get(getURL(port)).then((res) => {}).catch((reason) =>{
-      if(reason.code == 'ERR_NETWORK'){
-        setPort(-1);
-      }
-    })
+  setLoading(false);
+  if(!env){
+    fetch('/api/getEnv')
+      .then((res) => res.json())
+      .then((data) => {
+        setEnv(data)
+        if(workbenchPort != -1){
+          axios.get(getURL(data, workbenchPort)).then((res) => {}).catch((reason) =>{
+            if(reason.code == 'ERR_NETWORK'){
+              setWorkbenchPort(-1);
+              setStoragePort(-1);
+              setContainerID("");
+            }
+            setLoading(false);
+          })
+        }
+      })
   }
-});
+}, [env, workbenchPort, setWorkbenchPort, setStoragePort, setContainerID]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      console.log("containerID: ", containerID)
+      if(containerID != ""){
+        fetchLogUpdate()
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  })
 
   function useLocalStorage<T>(key: string, fallbackValue: T) {
     const [value, setValue] = useState(fallbackValue);
@@ -39,15 +72,37 @@ useEffect(() => {
   }
 
 
+  function findFirstDiffPos(a: string, b: string) {
+    var i = 0;
+    if (a === b) return -1;
+    while (a[i] === b[i]) i++;
+    return i;
+  }
 
-  useEffect(() =>{
-  })
+  function findRestofString(a: string , b: string ){
+    let i = findFirstDiffPos(a, b);
+    if(i == -1){
+      return "";
+    }
+    if(a > b){
+      return a.substring(i)
+    }
+    return b.substring(i)
+  }
+
+  function fetchLogUpdate(){
+    axios.get(`/api/node/logUpdate?id=${containerID}`).then(async (res) => {
+      setLog(res.data.replaceAll(/^[\W_]+/gm, ""));
+    })
+  }
 
   function load(){
     setLoading(true);
     axios.get(`/api/node/create`).then(async (res) => {
-      await new Promise(r => setTimeout(r, 20 * 1000)).then(() => {
-        setPort(res.data.workbench);
+      await new Promise(r => setTimeout(r, 2 * 1000)).then(() => {
+        setWorkbenchPort(res.data.workbench);
+        setStoragePort(res.data.storage);
+        setContainerID(res.data.containerID);
         setLoading(false);
       });
     });
@@ -61,23 +116,36 @@ useEffect(() => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.info}>
-        {port!=-1 ? `Url: ${getURL(port)}` : "No URL requested"}<br/>
+        {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
-      {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
-      {port!=-1? getEditorButton(getDemoURL(port)) :  <></> }
+      {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
+      <div className={styles.clickableContainer}>
+        {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
+        {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
+        {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
+      </div>
+      {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
+
 
     </div>
   );
 }
 
 
-function getURL(port: any){
-  return `${process.env.NEXT_PUBLIC_HOST}:${port}/rdf4j/repositories/`
+function getURL(env: any, port: any){
+  return `${env.BASE_URL}:${port}/rdf4j/repositories/`
 }
 
-function getDemoURL(port: any) {
-  return `${process.env.NEXT_PUBLIC_EDITOR_HOST}/home?name=demo&uri=${getURL(port)}`
+function getDemoEditorURL(env:any, port: any) {
+  return `${env.BASE_URL}:${env.EDITOR_PORT}/home?name=pacman_demo&uri=${getURL(env, port)}`
+}
+function getWorkbenchURL(env:any, port: any) {
+  return `${env.BASE_URL}:${port}/workbench`
+}
+
+function getPacmanURL(env:any, workbench_port:any, storage_port:any) {
+  return `${env.BASE_URL}:${env.PACMAN_PORT}/?uri=${env.BASE_URL}:${env.BACKEND_PORT}/api/pacman&workbench_port=${workbench_port}&storage_port=${storage_port}`
 }
 
 function getLoadingButton(){
@@ -90,6 +158,14 @@ function getUrlButton(load: any, known: boolean){
 
 function getEditorButton(url: string){
   return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Editor</a>
+}
+
+function getWorkbenchButton(url: string){
+  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Workbench</a>
+}
+
+function getPacmanButton(url: string){
+  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Pacman</a>
 }
 
 export default Home;

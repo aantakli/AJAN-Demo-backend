@@ -45,10 +45,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const adress = process.env.NEXT_PUBLIC_PORTAINER_HOST;
-  if(adress){
 
-    const portainer = new PortainerClient(adress, "admin", "HtZ&2niMmvSW2o$a");
+  console.log("Received Request for new container instance, preparing...");
+
+  const PORTAINER_USERNAME = process.env.PORTAINER_USERNAME;
+  const PORTAINER_PASSWORD = process.env.PORTAINER_PASSWORD;
+  const PORTAINER_PORT = process.env.PORTAINER_PORT;
+  const BASE_URL = process.env.BASE_URL;
+
+  if(PORTAINER_USERNAME && PORTAINER_PASSWORD && PORTAINER_PORT && BASE_URL){
+
+    const portainer = new PortainerClient(`${BASE_URL}:${PORTAINER_PORT}`, PORTAINER_USERNAME, PORTAINER_PASSWORD);
 
     let ports: any[] = []
     let containerList: any[] = await getContainerData(portainer);
@@ -62,7 +69,8 @@ export default async function handler(
 
     ports.sort(function(a, b){return a-b});
     ports = ports.slice(0, Math.ceil(ports.length / 2));
-    console.log(ports)
+
+    console.log("Currently occupied ports:", ports)
 
     if(ports.length == 0){
       ports.push(8079)
@@ -75,11 +83,11 @@ export default async function handler(
       Image:"aantakli/ajan-service:latest",
       ExposedPorts: { "8080/tcp": {}, "8090/tcp": {} },
       Env: [
-        `url=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}/rdf4j`,
-        `repoURL=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}/rdf4j/repositories/`,
+        `url=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}/rdf4j`,
+        `repoURL=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}/rdf4j/repositories/`,
         "Dpf4j_mode=development",
         "DloadTTLFiles=true",
-        `DpublicHostName=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}`
+        `DpublicHostName=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}`
       ],
       HostConfig:
         {
@@ -94,20 +102,15 @@ export default async function handler(
     }
 
 
+    console.log("Sending request to create container:")
     let createRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/create', data)
-
-    console.log("================================")
-    console.log(createRes)
-    console.log("================================")
 
 
     let id = createRes.Id
+    console.log("Container created with id:", id)
 
-    let startRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
-
-    console.log(".................................")
-    console.log(startRes)
-    console.log(".................................")
+    console.log("Sending request to start container:")
+    await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
 
     containerList = await getContainerData(portainer);
 
@@ -127,8 +130,14 @@ export default async function handler(
         }
       }
     })
-    //res.status(startRes.status).json(startRes.body)
-    res.status(statuscode).json(resPorts)
+    let ret = {
+      workbench: resPorts.workbench,
+      storage: resPorts.storage,
+      containerID: createRes.Id
+    }
+    console.log("Sending response with data:", ret)
+    res.status(statuscode).json(ret)
+    return;
   }
-  res.status(400).send("No Portainer Host found");
+  res.status(400).send("Error in Environment Variables")
 }

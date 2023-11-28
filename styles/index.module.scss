@@ -1,11 +1,21 @@
 .container{
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width='350'%20height='250'%20viewBox='0%200%20250%20245'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ctext%20x='30'%20y='40'%20transform='rotate(-15)'%20fill='lightgray'%3EDEMO%20WIP%3C/text%3E%3C/svg%3E");
   height: 100vh;
   width: 100vw;
   position: absolute;
   .info{
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 10px;
+    left: 15px;
+  }
+  .log{
+    height: 500px;
+    overflow-y: scroll;
+    width: 90%;
+    margin: 60px auto auto;
+    background-color: darkgrey;
+    white-space: pre;
+    font-size: 13px;
   }
   img{
     padding-top: 10px;
@@ -71,4 +81,21 @@
     box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
   }
 
+  .clickableContainer{
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    margin-top: 13px;
+    transform: translate(-50%, 0);
+    .clickable{
+      position: unset;
+      left: unset;
+      transform: unset;
+      margin-top: 0;
+      margin-right: 10px;
+    }
+    .clickable:last-child{
+      margin-right: 0;
+    }
+  }
 }
