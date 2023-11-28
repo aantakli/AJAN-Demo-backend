@@ -32,3 +32,4 @@ package-lock.json
 
 # typescript
 *.tsbuildinfo
+/.idea/watcherTasks.xml
