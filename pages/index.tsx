@@ -74,11 +74,9 @@ useEffect(() => {
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
       {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
-      {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
-      {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
       <div className={styles.clickableContainer}>
-        {getEditorButton("test")}
-        {getWorkbenchButton("test")}
+        {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
+        {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
       </div>
 
 
