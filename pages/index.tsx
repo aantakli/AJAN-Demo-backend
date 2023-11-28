@@ -116,7 +116,7 @@ function getWorkbenchButton(url: string){
 }
 
 function getPacmanButton(url: string){
-  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Workbench</a>
+  return <a target={'_blank'} className={styles.clickable} rel={'noreferrer'} href={url}>Pacman</a>
 }
 
 export default Home;

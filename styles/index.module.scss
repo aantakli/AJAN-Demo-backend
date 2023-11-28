@@ -82,10 +82,11 @@
       position: unset;
       left: unset;
       transform: unset;
-      margin-top: 0px;
-    }
-    .clickable:first-child{
+      margin-top: 0;
       margin-right: 10px;
+    }
+    .clickable:last-child{
+      margin-right: 0;
     }
   }
 }
