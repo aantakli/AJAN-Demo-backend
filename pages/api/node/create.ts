@@ -45,10 +45,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const adress = process.env.NEXT_PUBLIC_PORTAINER_HOST;
-  if(adress){
 
-    const portainer = new PortainerClient(adress, "admin", "HtZ&2niMmvSW2o$a");
+  const PORTAINER_USERNAME = process.env.PORTAINER_USERNAME;
+  const PORTAINER_PASSWORD = process.env.PORTAINER_PASSWORD;
+  const PORTAINER_PORT = process.env.PORTAINER_PORT;
+  const BASE_URL = process.env.BASE_URL;
+
+
+  if(PORTAINER_USERNAME && PORTAINER_PASSWORD && PORTAINER_PORT && BASE_URL){
+
+    const portainer = new PortainerClient(`${BASE_URL}:${PORTAINER_PORT}`, PORTAINER_USERNAME, PORTAINER_PASSWORD);
 
     let ports: any[] = []
     let containerList: any[] = await getContainerData(portainer);
@@ -75,11 +81,11 @@ export default async function handler(
       Image:"aantakli/ajan-service:latest",
       ExposedPorts: { "8080/tcp": {}, "8090/tcp": {} },
       Env: [
-        `url=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}/rdf4j`,
-        `repoURL=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}/rdf4j/repositories/`,
+        `url=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}/rdf4j`,
+        `repoURL=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}/rdf4j/repositories/`,
         "Dpf4j_mode=development",
         "DloadTTLFiles=true",
-        `DpublicHostName=http://demo.yannic-hock.de:${(ports[ports.length-1]+1+100).toString()}`
+        `DpublicHostName=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}`
       ],
       HostConfig:
         {
@@ -130,5 +136,5 @@ export default async function handler(
     //res.status(startRes.status).json(startRes.body)
     res.status(statuscode).json(resPorts)
   }
-  res.status(400).send("No Portainer Host found");
+  res.status(400).send("Error in Environment Variables")
 }
