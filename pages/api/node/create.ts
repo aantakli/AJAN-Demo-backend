@@ -46,6 +46,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
+  console.log("Recieved Request for new cotainer instance, preparing...");
+
   const PORTAINER_USERNAME = process.env.PORTAINER_USERNAME;
   const PORTAINER_PASSWORD = process.env.PORTAINER_PASSWORD;
   const PORTAINER_PORT = process.env.PORTAINER_PORT;
@@ -68,7 +70,8 @@ export default async function handler(
 
     ports.sort(function(a, b){return a-b});
     ports = ports.slice(0, Math.ceil(ports.length / 2));
-    console.log(ports)
+
+    console.log("Currently occupied ports:", ports)
 
     if(ports.length == 0){
       ports.push(8079)
@@ -100,6 +103,7 @@ export default async function handler(
     }
 
 
+    console.log("Sending request to create container:")
     let createRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/create', data)
 
     console.log("================================")
@@ -109,6 +113,7 @@ export default async function handler(
 
     let id = createRes.Id
 
+    console.log("Sending request to start container:")
     let startRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
 
     console.log(".................................")
@@ -135,6 +140,7 @@ export default async function handler(
     })
     //res.status(startRes.status).json(startRes.body)
     res.status(statuscode).json(resPorts)
+    return;
   }
   res.status(400).send("Error in Environment Variables")
 }
