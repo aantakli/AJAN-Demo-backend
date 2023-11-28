@@ -68,7 +68,6 @@ useEffect(() => {
         <meta name="description" content="AJAN Demo Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.demo}>DEMO</div>
       <div className={styles.info}>
         {port!=-1 && env ? `Url: ${getURL(env, port)}` : "No URL requested"}
       </div>
@@ -77,7 +76,7 @@ useEffect(() => {
       <div className={styles.clickableContainer}>
         {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
         {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
-        {port!=-1 && env? getPacmanURL(getPacmanURL(env)) :  <></> }
+        {port!=-1 && env? getPacmanButton(getPacmanURL(env)) :  <></> }
       </div>
 
     </div>
