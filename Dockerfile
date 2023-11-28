@@ -13,7 +13,7 @@ COPY pages/ pages/
 COPY public/ public/
 COPY styles/ styles/
 COPY *.json ./
-COPY .env ./
+COPY .env.local ./
 COPY *.ts ./
 COPY *.js ./
 COPY yarn.lock ./
