@@ -106,19 +106,12 @@ export default async function handler(
     console.log("Sending request to create container:")
     let createRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/create', data)
 
-    console.log("================================")
-    console.log(createRes)
-    console.log("================================")
-
 
     let id = createRes.Id
+    console.log("Container created with id:", id)
 
     console.log("Sending request to start container:")
-    let startRes:any = await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
-
-    console.log(".................................")
-    console.log(startRes)
-    console.log(".................................")
+    await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
 
     containerList = await getContainerData(portainer);
 
@@ -138,7 +131,7 @@ export default async function handler(
         }
       }
     })
-    //res.status(startRes.status).json(startRes.body)
+    console.log("Sending response with ports:", resPorts)
     res.status(statuscode).json(resPorts)
     return;
   }

@@ -73,11 +73,11 @@ useEffect(() => {
 
 
 function getURL(port: any){
-  return `${process.env.NEXT_PUBLIC_HOST}:${port}/rdf4j/repositories/`
+  return `${process.env.BASE_URL}:${port}/rdf4j/repositories/`
 }
 
 function getDemoURL(port: any) {
-  return `${process.env.NEXT_PUBLIC_EDITOR_HOST}/home?name=demo&uri=${getURL(port)}`
+  return `${process.env.BASE_URL}:${process.env.EDITOR_PORT}/home?name=pacman_demo&uri=${getURL(port)}`
 }
 
 function getLoadingButton(){
