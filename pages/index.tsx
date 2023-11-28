@@ -6,6 +6,7 @@ import axios from 'axios';
 
 function Home(){
 
+  const [env, setEnv] = useState(null)
   let [loading, setLoading] = useState(false);
   const [port, setPort] = usePortStorage();
 
@@ -16,11 +17,19 @@ function Home(){
 
 useEffect(() => {
   if(port != -1){
-    axios.get(getURL(port)).then((res) => {}).catch((reason) =>{
+    axios.get(getURL(env, port)).then((res) => {}).catch((reason) =>{
       if(reason.code == 'ERR_NETWORK'){
         setPort(-1);
       }
     })
+  }
+  if(!env){
+    fetch('/api/getEnv')
+      .then((res) => res.json())
+      .then((data) => {
+        setEnv(data)
+        console.log(data)
+      })
   }
 });
 
@@ -61,23 +70,23 @@ useEffect(() => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.info}>
-        {port!=-1 ? `Url: ${getURL(port)}` : "No URL requested"}<br/>
+        {port!=-1 ? `Url: ${getURL(env, port)}` : "No URL requested"}<br/>
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
       {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
-      {port!=-1? getEditorButton(getDemoURL(port)) :  <></> }
+      {port!=-1? getEditorButton(getDemoURL(env, port)) :  <></> }
 
     </div>
   );
 }
 
 
-function getURL(port: any){
-  return `${process.env.BASE_URL}:${port}/rdf4j/repositories/`
+function getURL(env:any, port: any){
+  return `${env.BASE_URL}:${port}/rdf4j/repositories/`
 }
 
-function getDemoURL(port: any) {
-  return `${process.env.BASE_URL}:${process.env.EDITOR_PORT}/home?name=pacman_demo&uri=${getURL(port)}`
+function getDemoURL(env:any, port: any) {
+  return `${env.BASE_URL}:${env.EDITOR_PORT}/home?name=pacman_demo&uri=${getURL(env, port)}`
 }
 
 function getLoadingButton(){
