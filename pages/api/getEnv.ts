@@ -22,6 +22,7 @@ export default async function handler(
   const EDITOR_PORT = process.env.EDITOR_PORT;
   const PACMAN_PORT = process.env.PACMAN_PORT;
   const BACKEND_PORT = process.env.BACKEND_PORT;
+  const AGENT_UUID = process.env.AGENT_UUID;
 
 
   if(PORTAINER_USERNAME && PORTAINER_PASSWORD && PORTAINER_PORT && BASE_URL && EDITOR_PORT && PACMAN_PORT && BACKEND_PORT){
@@ -30,7 +31,8 @@ export default async function handler(
       BASE_URL: BASE_URL,
       EDITOR_PORT: EDITOR_PORT,
       PACMAN_PORT: PACMAN_PORT,
-      BACKEND_PORT: BACKEND_PORT
+      BACKEND_PORT: BACKEND_PORT,
+      AGENT_UUID: AGENT_UUID
     });
   } else {
     res.status(500).send("Missing Environment Variables")

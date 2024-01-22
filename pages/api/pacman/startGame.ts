@@ -12,6 +12,7 @@ export default async function handler(
 
   if(req.body){
     const uuid = req.body
+    const vars = await (await fetch('/api/getEnv')).json();
 
     const initData = "@prefix ajan: <http://www.ajan.de/ajan-ns#> .\n" +
                               "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
@@ -19,14 +20,14 @@ export default async function handler(
                               "@prefix requestURI: <http://pacman.demo/requestURI> \n." +
                               "_:initAgent rdf:type ajan:AgentInitialisation ;\n" +
                                 "\t ajan:agentId \"" + uuid + "\" ;\n" +
-                                "\t ajan:agentTemplate <http://localhost:8090/rdf4j/repositories/agents#AG_0a488da3-d0f9-470f-ad24-145c140b8f5b> ;\n" +
+                                "\t ajan:agentTemplate <" + vars.BASE_URL + ":8090/rdf4j/repositories/agents#" + vars.AGENT_UUID + "> ;\n" +
                               "ajan:agentInitKnowledge [\n" +
-                                "requestURI:fetch \"http://192.168.178.139:3000/api/pacman/fetch?uuid=" + uuid + "\"^^xsd:string ;\n" +
-                                "requestURI:updateMovement \"http://192.168.178.139:3000/api/pacman/updateMovement?uuid=" + uuid + "\"^^xsd:string ;\n" +
+                                "requestURI:fetch \"" + vars.BASE_URL  + ":" + vars.BACKEND_PORT + "/api/pacman/fetch?uuid=" + uuid + "\"^^xsd:string ;\n" +
+                                "requestURI:updateMovement \"" + vars.BASE_URL + ":" + vars.BACKEND_PORT + "/api/pacman/updateMovement?uuid=" + uuid + "\"^^xsd:string ;\n" +
                               "] ."
 
 
-    fetch("http://localhost:8080/ajan/agents/", {
+    fetch(vars.BASE_URL + ":8080/ajan/agents/", {
       method: "POST",
       body: initData,
       headers: {

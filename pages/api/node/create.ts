@@ -46,7 +46,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
-  console.log("Recieved Request for new cotainer instance, preparing...");
+  console.log("Received Request for new container instance, preparing...");
 
   const PORTAINER_USERNAME = process.env.PORTAINER_USERNAME;
   const PORTAINER_PASSWORD = process.env.PORTAINER_PASSWORD;
