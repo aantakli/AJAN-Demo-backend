@@ -53,7 +53,7 @@ export default async function handler(
   const PORTAINER_PORT = process.env.PORTAINER_PORT;
   const BASE_URL = process.env.BASE_URL;
 
-
+  console.log(process.env)
   if(PORTAINER_USERNAME && PORTAINER_PASSWORD && PORTAINER_PORT && BASE_URL){
 
     const portainer = new PortainerClient(`${BASE_URL}:${PORTAINER_PORT}`, PORTAINER_USERNAME, PORTAINER_PASSWORD);
