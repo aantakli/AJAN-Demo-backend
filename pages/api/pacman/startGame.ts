@@ -12,7 +12,8 @@ export default async function handler(
 
   if(req.body){
     const uuid = req.body
-    const vars = await (await fetch(window.location.hostname + '/api/getEnv')).json();
+    console.log(location.hostname)
+    const vars = await (await fetch(location.hostname + '/api/getEnv')).json();
 
     const initData = "@prefix ajan: <http://www.ajan.de/ajan-ns#> .\n" +
                               "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
