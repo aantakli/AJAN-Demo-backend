@@ -21,7 +21,7 @@ export default async function handler(
   global.dirMap.set(req.query.uuid.toString(), dir)
 
   // @ts-ignore
-  let node = global.dirMap.get(req.query.uuid.toString())
+  node = global.dirMap.get(req.query.uuid.toString())
   console.log("new", node)
 
 
