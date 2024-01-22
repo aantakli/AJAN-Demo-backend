@@ -7,16 +7,23 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
-  console.log("movement data")
 
   const dir = req.body.split(" ")[5];
-
+  console.log("movement data", dir)
   //console.log(dir)
 
   // @ts-ignore
   let node = global.dirMap.get(req.query.uuid.toString())
 
-  console.log(dir, node)
+  console.log("old", node)
+
+  // @ts-ignore
+  global.dirMap.set(req.query.uuid.toString(), dir)
+
+  // @ts-ignore
+  let node = global.dirMap.get(req.query.uuid.toString())
+  console.log("new", node)
+
 
   //res.setHeader('Content-Type', 'application/ld+json')
 

@@ -63,13 +63,17 @@ export default async function handler(
 
         // @ts-ignore
         let dirMap = global.dirMap
-        if(!dirMap)
+        if(!dirMap){
+
           dirMap = new Map();
 
-        let dir = "right"
-        dirMap.set(uuid, dir)
-        // @ts-ignore
-        global.dirMap = dirMap
+          let dir = "right"
+          dirMap.set(uuid, dir)
+          // @ts-ignore
+          global.dirMap = dirMap
+        }
+
+        let dir = dirMap.get(uuid)
 
 
 
