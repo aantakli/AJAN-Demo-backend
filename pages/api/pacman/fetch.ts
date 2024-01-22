@@ -14,10 +14,10 @@ export default async function handler(
 
   res.setHeader('Content-Type', 'text/turtle')
 
-
 try {
   // @ts-ignore
   const uuid = req.query.uuid.toString()
+  console.log("Fetched Data for ", uuid)
 
   // @ts-ignore
   res.status(200).send(global.dataMap.get(uuid));
