@@ -8,11 +8,15 @@ function Home(){
 
   const [env, setEnv] = useState(null)
   let [loading, setLoading] = useState(false);
-  const [port, setPort] = usePortStorage();
+  const [storagePort, setStoragePort] = useStoragePort();
+  const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
 
 
-  function usePortStorage() {
-    return useLocalStorage<Number>('port', -1);
+  function useWorkbenchPort() {
+    return useLocalStorage<Number>('workbenchPort', -1);
+  }
+  function useStoragePort() {
+    return useLocalStorage<Number>('storagePort', -1);
   }
 
 useEffect(() => {
@@ -21,10 +25,11 @@ useEffect(() => {
       .then((res) => res.json())
       .then((data) => {
         setEnv(data)
-        if(port != -1){
-          axios.get(getURL(data, port)).then((res) => {}).catch((reason) =>{
+        if(workbenchPort != -1){
+          axios.get(getURL(data, workbenchPort)).then((res) => {}).catch((reason) =>{
             if(reason.code == 'ERR_NETWORK'){
-              setPort(-1);
+              setWorkbenchPort(-1);
+              setStoragePort(-1);
             }
           })
         }
@@ -55,7 +60,8 @@ useEffect(() => {
     setLoading(true);
     axios.get(`/api/node/create`).then(async (res) => {
       await new Promise(r => setTimeout(r, 20 * 1000)).then(() => {
-        setPort(res.data.workbench);
+        setWorkbenchPort(res.data.workbench);
+        setStoragePort(res.data.storage);
         setLoading(false);
       });
     });
@@ -69,14 +75,14 @@ useEffect(() => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.info}>
-        {port!=-1 && env ? `Url: ${getURL(env, port)}` : "No URL requested"}
+        {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
       </div>
       <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
-      {loading? getLoadingButton() : getUrlButton(load, port!=-1)}
+      {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
       <div className={styles.clickableContainer}>
-        {port!=-1 && env? getEditorButton(getDemoEditorURL(env, port)) :  <></> }
-        {port!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, port)) :  <></> }
-        {port!=-1 && env? getPacmanButton(getPacmanURL(env)) :  <></> }
+        {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
+        {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
+        {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
       </div>
 
     </div>
@@ -95,8 +101,8 @@ function getWorkbenchURL(env:any, port: any) {
   return `${env.BASE_URL}:${port}/workbench`
 }
 
-function getPacmanURL(env:any) {
-  return `${env.BASE_URL}:${env.PACMAN_PORT}/?uri=${env.BASE_URL}:${env.BACKEND_PORT}/api/pacman`
+function getPacmanURL(env:any, workbench_port:any, storage_port:any) {
+  return `${env.BASE_URL}:${env.PACMAN_PORT}/?uri=${env.BASE_URL}:${env.BACKEND_PORT}/api/pacman&workbench_port=${workbench_port}&storage_port=${storage_port}`
 }
 
 function getLoadingButton(){
