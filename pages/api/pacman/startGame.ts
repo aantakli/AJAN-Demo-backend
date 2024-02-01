@@ -11,11 +11,11 @@ export default async function handler(
 
 
   if(req.body){
-    console.log(req.body)
     let json = await JSON.parse(req.body);
+    console.log(json)
     const uuid = json.uuid;
     const WORKBENCH_PORT = json.workbench_Port;
-    const STORAGE_PORT = (await JSON.parse(req.body)).storage_Port;
+    const STORAGE_PORT = json.storage_Port;
     const BASE_URL = process.env.BASE_URL;
     const BACKEND_PORT = process.env.BACKEND_PORT;
     const AGENT_UUID = process.env.AGENT_UUID;
