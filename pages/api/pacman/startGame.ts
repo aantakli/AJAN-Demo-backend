@@ -11,6 +11,7 @@ export default async function handler(
 
 
   if(req.body){
+    console.log(req.body)
     let json = await JSON.parse(req.body);
     const uuid = json.uuid;
     const WORKBENCH_PORT = json.workbench_Port;
