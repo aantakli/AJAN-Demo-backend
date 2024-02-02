@@ -10,7 +10,7 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Headers", "*");
 
   console.log("Received new request to start a new Agent-Instance")
-  console.log(req)
+  console.log(req.body)
   if(req.body){
     console.log(req.body)
     let json = await JSON.parse(req.body);
