@@ -94,7 +94,7 @@ useEffect(() => {
         setLog(res.data);
       } else {
         let diff = findRestofString(res.data, log)
-        setLog(log + diff)
+        setLog(res.data)
       }
     })
   }
@@ -128,7 +128,7 @@ useEffect(() => {
         {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
         {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
       </div>
-      <div>
+      <div className={styles.log}>
         {log}
       </div>
 
