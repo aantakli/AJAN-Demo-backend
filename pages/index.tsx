@@ -102,7 +102,7 @@ useEffect(() => {
   function load(){
     setLoading(true);
     axios.get(`/api/node/create`).then(async (res) => {
-      await new Promise(r => setTimeout(r, 20 * 1000)).then(() => {
+      await new Promise(r => setTimeout(r, 2 * 1000)).then(() => {
         setWorkbenchPort(res.data.workbench);
         setStoragePort(res.data.storage);
         setContainerID(res.data.containerID);
