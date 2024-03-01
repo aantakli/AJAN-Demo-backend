@@ -44,6 +44,16 @@ useEffect(() => {
   }
 });
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      console.log("containerID: ", containerID)
+      if(containerID != ""){
+        fetchLogUpdate()
+      }
+    }, 1000);
+    return () => clearInterval(id);
+  })
+
   function useLocalStorage<T>(key: string, fallbackValue: T) {
     const [value, setValue] = useState(fallbackValue);
     useEffect(() => {
@@ -65,7 +75,7 @@ useEffect(() => {
 
   function fetchLogUpdate(){
     axios.get(`/api/node/logUpdate?${containerID}`).then(async (res) => {
-      console.log(res.data)
+      console.log("Log entries: ", res.data)
     })
   }
 
@@ -76,7 +86,6 @@ useEffect(() => {
         setWorkbenchPort(res.data.workbench);
         setStoragePort(res.data.storage);
         setContainerID(res.data.containerID);
-        fetchLogUpdate();
         setLoading(false);
       });
     });
