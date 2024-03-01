@@ -93,8 +93,13 @@ useEffect(() => {
       if(log == null){
         setLog(res.data);
       } else {
-        let diff = findRestofString(res.data, log)
-        setLog(res.data.replaceAll(/^[^a-zA-Z0-9]+/g, ""))
+        let arr = res.data.split("\n");
+        let newLog:string = "";
+        for(let str in arr){
+          str = str.replaceAll(/^[^a-zA-Z0-9]+/g, "")
+          newLog += str;
+        }
+        setLog(newLog)
       }
     })
   }
