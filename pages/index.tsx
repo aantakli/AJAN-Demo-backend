@@ -11,7 +11,7 @@ function Home(){
   let [loading, setLoading] = useState(false);
   const [storagePort, setStoragePort] = useStoragePort();
   const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
-  const [containerID, setContainerID] = useWorkbenchPort();
+  const [containerID, setContainerID] = useContainerID();
 
 
   function useWorkbenchPort() {
@@ -22,7 +22,7 @@ function Home(){
   }
 
   function useContainerID() {
-    return useLocalStorage<Number>('containerID', -1);
+    return useLocalStorage<String>('containerID', "");
   }
 
 useEffect(() => {
@@ -36,7 +36,7 @@ useEffect(() => {
             if(reason.code == 'ERR_NETWORK'){
               setWorkbenchPort(-1);
               setStoragePort(-1);
-              setContainerID(-1);
+              setContainerID("");
             }
           })
         }
@@ -76,9 +76,9 @@ useEffect(() => {
         setWorkbenchPort(res.data.workbench);
         setStoragePort(res.data.storage);
         setContainerID(res.data.containerID);
+        fetchLogUpdate();
         setLoading(false);
       });
-      fetchLogUpdate();
     });
   }
 
