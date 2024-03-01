@@ -6,7 +6,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    console.log("Received Request for new container instance, preparing...");
+    console.log("Logrequest...");
 
     const id = req.query.id as string;
     const PORTAINER_USERNAME = process.env.PORTAINER_USERNAME;
@@ -16,6 +16,7 @@ export default async function handler(
 
     if(PORTAINER_USERNAME && PORTAINER_PASSWORD && PORTAINER_PORT && BASE_URL){
         const portainer = new PortainerClient(`${BASE_URL}:${PORTAINER_PORT}`, PORTAINER_USERNAME, PORTAINER_PASSWORD);
+        console.log(id)
         let containerData = await portainer.callApiWithKey('get', '/api/endpoints/2/docker/containers/' + id + '/logs?since=0&stderr=1&stdout=1&tail=100&timestamps=0')
         console.log(containerData)
         res.status(200).send('')
