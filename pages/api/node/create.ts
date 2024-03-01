@@ -135,8 +135,8 @@ export default async function handler(
       storage: resPorts.storage,
       containerID: createRes.Id
     }
-    console.log("Sending response with ports:", ret)
-    res.status(statuscode).json(resPorts)
+    console.log("Sending response with data:", ret)
+    res.status(statuscode).json(ret)
     return;
   }
   res.status(400).send("Error in Environment Variables")
