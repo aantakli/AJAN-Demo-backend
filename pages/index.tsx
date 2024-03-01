@@ -8,6 +8,7 @@ import {func} from "prop-types";
 function Home(){
 
   const [env, setEnv] = useState(null)
+  const [log, setLog] = useState("")
   let [loading, setLoading] = useState(false);
   const [storagePort, setStoragePort] = useStoragePort();
   const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
@@ -69,13 +70,32 @@ useEffect(() => {
   }
 
 
+  function findFirstDiffPos(a: string, b: string) {
+    var i = 0;
+    if (a === b) return -1;
+    while (a[i] === b[i]) i++;
+    return i;
+  }
 
-  useEffect(() =>{
-  })
+  function findRestofString(a: string , b: string ){
+    let i = findFirstDiffPos(a, b);
+    if(i == -1){
+      return "";
+    }
+    if(a > b){
+      return a.substring(i)
+    }
+    return b.substring(i)
+  }
 
   function fetchLogUpdate(){
     axios.get(`/api/node/logUpdate?id=${containerID}`).then(async (res) => {
-      console.log("Log entries: ", res.data)
+      if(log == null){
+        setLog(res.data);
+      } else {
+        let diff = findRestofString(res.data, log)
+        setLog(log + diff)
+      }
     })
   }
 
@@ -107,6 +127,9 @@ useEffect(() => {
         {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
         {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
         {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
+      </div>
+      <div>
+        {log}
       </div>
 
     </div>
