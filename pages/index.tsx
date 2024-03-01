@@ -50,7 +50,7 @@ useEffect(() => {
       if(containerID != ""){
         fetchLogUpdate()
       }
-    }, 1000);
+    }, 5000);
     return () => clearInterval(id);
   })
 
@@ -74,7 +74,7 @@ useEffect(() => {
   })
 
   function fetchLogUpdate(){
-    axios.get(`/api/node/logUpdate?${containerID}`).then(async (res) => {
+    axios.get(`/api/node/logUpdate?id=${containerID}`).then(async (res) => {
       console.log("Log entries: ", res.data)
     })
   }
