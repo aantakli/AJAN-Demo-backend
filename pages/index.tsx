@@ -94,7 +94,7 @@ useEffect(() => {
         setLog(res.data);
       } else {
         let diff = findRestofString(res.data, log)
-        setLog(res.data.replaceAll("", "").replaceAll("�", ""))
+        setLog(res.data.replaceAll("", "").replaceAll("�", "").replaceAll("\t", ""))
       }
     })
   }
