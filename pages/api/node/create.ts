@@ -130,7 +130,12 @@ export default async function handler(
         }
       }
     })
-    console.log("Sending response with ports:", resPorts)
+    let ret = {
+      workbench: resPorts.workbench,
+      storage: resPorts.storage,
+      containerID: createRes.Id
+    }
+    console.log("Sending response with ports:", ret)
     res.status(statuscode).json(resPorts)
     return;
   }

@@ -2,6 +2,7 @@ import Head from 'next/head'
 import styles from '../styles/index.module.scss';
 import { useState, useEffect } from 'react'
 import axios from 'axios';
+import {func} from "prop-types";
 
 
 function Home(){
@@ -10,6 +11,7 @@ function Home(){
   let [loading, setLoading] = useState(false);
   const [storagePort, setStoragePort] = useStoragePort();
   const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
+  const [containerID, setContainerID] = useWorkbenchPort();
 
 
   function useWorkbenchPort() {
@@ -17,6 +19,10 @@ function Home(){
   }
   function useStoragePort() {
     return useLocalStorage<Number>('storagePort', -1);
+  }
+
+  function useContainerID() {
+    return useLocalStorage<Number>('containerID', -1);
   }
 
 useEffect(() => {
@@ -30,6 +36,7 @@ useEffect(() => {
             if(reason.code == 'ERR_NETWORK'){
               setWorkbenchPort(-1);
               setStoragePort(-1);
+              setContainerID(-1);
             }
           })
         }
@@ -56,14 +63,22 @@ useEffect(() => {
   useEffect(() =>{
   })
 
+  function fetchLogUpdate(){
+    axios.get(`/api/node/logUpdate?${containerID}`).then(async (res) => {
+      console.log(res.data)
+    })
+  }
+
   function load(){
     setLoading(true);
     axios.get(`/api/node/create`).then(async (res) => {
       await new Promise(r => setTimeout(r, 20 * 1000)).then(() => {
         setWorkbenchPort(res.data.workbench);
         setStoragePort(res.data.storage);
+        setContainerID(res.data.containerID);
         setLoading(false);
       });
+      fetchLogUpdate();
     });
   }
 
