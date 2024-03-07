@@ -101,7 +101,7 @@ useEffect(() => {
           str = str.replaceAll(/^[^a-zA-Z0-9]+/g, "")
           newLog += str;
         }
-        setLog(newLog)
+        setLog(res.data)
       }
     })
   }
@@ -135,7 +135,7 @@ useEffect(() => {
         {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
         {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
       </div>
-      {!loading && <div className={styles.log}>{log}</div>}
+      {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
 
 
     </div>
