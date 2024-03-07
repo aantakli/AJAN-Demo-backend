@@ -27,6 +27,7 @@ function Home(){
   }
 
 useEffect(() => {
+  setLoading(false);
   if(!env){
     fetch('/api/getEnv')
       .then((res) => res.json())
@@ -39,11 +40,12 @@ useEffect(() => {
               setStoragePort(-1);
               setContainerID("");
             }
+            setLoading(false);
           })
         }
       })
   }
-});
+}, [env, workbenchPort, setWorkbenchPort, setStoragePort, setContainerID]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -133,16 +135,15 @@ useEffect(() => {
         {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
         {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
       </div>
-      <div className={styles.log}>
-        {log}
-      </div>
+      {!loading && <div className={styles.log}>{log}</div>}
+
 
     </div>
   );
 }
 
 
-function getURL(env:any, port: any){
+function getURL(env: any, port: any){
   return `${env.BASE_URL}:${port}/rdf4j/repositories/`
 }
 
