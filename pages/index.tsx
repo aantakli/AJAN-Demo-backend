@@ -92,17 +92,7 @@ useEffect(() => {
 
   function fetchLogUpdate(){
     axios.get(`/api/node/logUpdate?id=${containerID}`).then(async (res) => {
-      if(log == null){
-        setLog(res.data);
-      } else {
-        let arr = res.data.split("\n");
-        let newLog:string = "";
-        for(let str in arr){
-          str = str.replaceAll(/^[^a-zA-Z0-9]+/g, "")
-          newLog += str;
-        }
-        setLog(res.data)
-      }
+      setLog(res.data.replaceAll(/^[\W_]+/gm, ""));
     })
   }
 
