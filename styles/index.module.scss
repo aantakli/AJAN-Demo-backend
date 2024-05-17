@@ -31,6 +31,9 @@
         -moz-hyphens: auto;
         -ms-hyphens: auto;
         hyphens: auto;
+        span:first-child{
+          background-color: #969b9b;
+        }
       }
       div:nth-child(even){
         background-color: #c3c8c9;

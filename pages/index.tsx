@@ -100,12 +100,12 @@ useEffect(() => {
           line = line.replace(start[0], '');
         }
         let date = line.split(" ")[0];
+        let e = <span></span>
         if(date){
           let format = new Date(date).toTimeString().split(" ")[0] + ':'
-          line = line.replace(date, format);
+          e = <div><span>{format}</span> <span>{line}</span></div>;
         }
-
-        data.push(<div>{line}</div>)
+        data.push(e)
       })
       setLog(data.reverse());
     })
