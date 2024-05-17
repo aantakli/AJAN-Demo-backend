@@ -2,7 +2,6 @@ import Head from 'next/head'
 import styles from '../styles/index.module.scss';
 import { useState, useEffect } from 'react'
 import axios from 'axios';
-import {func} from "prop-types";
 
 
 function Home(){
@@ -110,24 +109,24 @@ useEffect(() => {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>AJAN Demo</title>
-        <meta name="description" content="AJAN Demo Website" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className={styles.info}>
-        {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
+      <div className={styles.background}>
+        <Head>
+          <title>AJAN Demo</title>
+          <meta name="description" content="AJAN Demo Website" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div className={styles.info}>
+          {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
+        </div>
+        <img src={"/AJAN-Logo-TW.png"} alt={'ajan-logo'}/>
+        {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
+        <div className={styles.clickableContainer}>
+          {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
+          {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
+          {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
+        </div>
+        {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
       </div>
-      <img src={"https://raw.githubusercontent.com/aantakli/AJAN-service/master/images/logo_old.bmp"} alt={'ajan-logo'}/>
-      {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
-      <div className={styles.clickableContainer}>
-        {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
-        {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
-        {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
-      </div>
-      {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
-
-
     </div>
   );
 }

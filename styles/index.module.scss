@@ -1,101 +1,128 @@
 .container{
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width='350'%20height='250'%20viewBox='0%200%20250%20245'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ctext%20x='30'%20y='40'%20transform='rotate(-15)'%20fill='lightgray'%3EDEMO%20WIP%3C/text%3E%3C/svg%3E");
   height: 100vh;
   width: 100vw;
   position: absolute;
-  .info{
+  background: linear-gradient(to bottom right, #1E1B55, #1B3284, #EA5B97, #F5A399, #5CB697, #8EC8B1, #FFF176);
+  animation: backgroundGradient 120s ease infinite;
+  background-size: 400% 400%;
+
+  .background{
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width='350'%20height='250'%20viewBox='0%200%20250%20245'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3E%3Ctext%20x='30'%20y='40'%20transform='rotate(-15)'%20fill='lightgray'%3EDEMO%20WIP%3C/text%3E%3C/svg%3E");
+    height: 100vh;
+    width: 100vw;
     position: absolute;
-    top: 10px;
-    left: 15px;
-  }
-  .log{
-    height: 500px;
-    overflow-y: scroll;
-    width: 90%;
-    margin: 60px auto auto;
-    background-color: darkgrey;
-    white-space: pre;
-    font-size: 13px;
-  }
-  img{
-    padding-top: 10px;
-    padding-bottom: 20px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .clickable{
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    appearance: none;
-    background-color: #181940;
-    border: 1px solid rgba(27, 31, 35, .15);
-    border-radius: 6px;
-    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: block;
-    font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
-    padding: 6px 16px;
-    text-align: center;
-    text-decoration: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .clickable:focus:not(:focus-visible):not(.focus-visible) {
-    box-shadow: none;
-    outline: none;
-  }
-
-  a.clickable{
-    display: inline-block;
-    margin-top: 10px;
-  }
-
-  .clickable:hover {
-    background-color: #393b84;
-  }
-
-  .clickable:focus {
-    box-shadow: rgba(10, 11, 31, 0.4) 0 0 0 3px;
-    outline: none;
-  }
-
-  .clickable:disabled {
-    background-color: #a5a5e3;
-    border-color: rgba(27, 31, 35, .1);
-    color: rgba(255, 255, 255, .8);
-    cursor: default;
-  }
-
-  .clickable:active {
-    background-color: #181940;
-    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-  }
-
-  .clickableContainer{
-    display: inline-block;
-    position: absolute;
-    left: 50%;
-    margin-top: 13px;
-    transform: translate(-50%, 0);
+    .info{
+      position: absolute;
+      top: 10px;
+      left: 15px;
+    }
+    .log{
+      height: 500px;
+      overflow-y: scroll;
+      width: 90%;
+      margin: 60px auto auto;
+      background-color: #D1D6D8;
+      white-space: pre;
+      font-size: 13px;
+    }
+    img{
+      padding-top: 10px;
+      padding-bottom: 20px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+    }
     .clickable{
-      position: unset;
-      left: unset;
-      transform: unset;
-      margin-top: 0;
-      margin-right: 10px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      appearance: none;
+      background-color: #D1D6D8;
+      border: 1px solid rgba(27, 31, 35, .15);
+      border-radius: 6px;
+      box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+      box-sizing: border-box;
+      color: black;
+      cursor: pointer;
+      display: block;
+      font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      padding: 6px 16px;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      vertical-align: middle;
+      white-space: nowrap;
     }
-    .clickable:last-child{
-      margin-right: 0;
+    .clickable:focus:not(:focus-visible):not(.focus-visible) {
+      box-shadow: none;
+      outline: none;
     }
+
+    a.clickable{
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .clickable:hover:enabled {
+      background: linear-gradient(to bottom right, #FFF176, #8EC8B1, #5CB697, #F5A399, #EA5B97, #1B3284, #1E1B55);
+      animation: backgroundGradient 20s;
+      animation-fill-mode: forwards;
+      background-size: 300% 300%;
+    }
+
+    .clickable:focus:enabled {
+      box-shadow: rgba(10, 11, 31, 0.4) 0 0 0 3px;
+      outline: none;
+    }
+
+    .clickable:disabled {
+      background-color: #aeb1b6 !important;
+      border-color: rgba(27, 31, 35, .1);
+      color: rgba(255, 255, 255, .8);
+      cursor: default;
+    }
+
+    .clickable:active {
+      background-color: #181940;
+      box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+    }
+
+    .clickableContainer{
+      display: inline-block;
+      position: absolute;
+      left: 50%;
+      margin-top: 13px;
+      transform: translate(-50%, 0);
+      .clickable{
+        position: unset;
+        left: unset;
+        transform: unset;
+        margin-top: 0;
+        margin-right: 10px;
+      }
+      .clickable:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@keyframes backgroundGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  100% {
+    background-position: 0% 0%;
   }
 }
