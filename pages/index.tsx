@@ -100,6 +100,7 @@ useEffect(() => {
           line = line.replace(start[0], '');
         }
         let date = line.split(" ")[0];
+        line = line.replace(date, "");
         let e = <span></span>
         if(date){
           let format = new Date(date).toTimeString().split(" ")[0] + ':'
