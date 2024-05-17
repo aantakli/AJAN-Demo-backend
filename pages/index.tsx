@@ -53,7 +53,7 @@ useEffect(() => {
       if(containerID != ""){
         fetchLogUpdate()
       }
-    }, 3000);
+    }, 5000);
     return () => clearInterval(id);
   })
 
