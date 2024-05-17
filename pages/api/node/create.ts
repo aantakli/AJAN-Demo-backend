@@ -110,7 +110,7 @@ export default async function handler(
     console.log("Container created with id:", id)
 
     console.log("Sending request to start container:")
-    await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/restart')
+    await portainer.callApiWithKey('POST', '/api/endpoints/2/docker/containers/' + createRes.Id + '/start')
 
     containerList = await getContainerData(portainer);
 
