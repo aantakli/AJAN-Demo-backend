@@ -7,8 +7,8 @@ import axios from 'axios';
 function Home(){
 
   const [env, setEnv] = useState(null)
-  const [log, setLog] = useState("")
-  let [loading, setLoading] = useState(false);
+  const [log, setLog] = useState<JSX.Element[]>()
+  let [loading, setLoading] = useState(true);
   const [storagePort, setStoragePort] = useStoragePort();
   const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
   const [containerID, setContainerID] = useContainerID();
@@ -26,7 +26,6 @@ function Home(){
   }
 
 useEffect(() => {
-  setLoading(false);
   if(!env){
     fetch('/api/getEnv')
       .then((res) => res.json())
@@ -41,6 +40,8 @@ useEffect(() => {
             }
             setLoading(false);
           })
+        } else {
+          setLoading(false);
         }
       })
   }
@@ -52,7 +53,7 @@ useEffect(() => {
       if(containerID != ""){
         fetchLogUpdate()
       }
-    }, 5000);
+    }, 3200);
     return () => clearInterval(id);
   })
 
@@ -91,7 +92,23 @@ useEffect(() => {
 
   function fetchLogUpdate(){
     axios.get(`/api/node/logUpdate?id=${containerID}`).then(async (res) => {
-      setLog(res.data.replaceAll(/^[\W_]+/gm, ""));
+      let log = res.data.replaceAll(/^[\W_]+/gm, "")
+      let data: JSX.Element[] = [];
+      log.split('\n').forEach((line: string) => {
+        let start = line.split(' ')[0].split("-")[0];
+        if(start.length != 4){
+          line = line.replace(start[0], '');
+        }
+        let date = line.split(" ")[0];
+        line = line.replace(date, "");
+        let e = <span></span>
+        if(date){
+          let format = new Date(date).toTimeString().split(" ")[0] + ':'
+          e = <div><span>{format}</span> <span>{line}</span></div>;
+        }
+        data.push(e)
+      })
+      setLog(data.reverse());
     })
   }
 
@@ -112,20 +129,20 @@ useEffect(() => {
       <div className={styles.background}>
         <Head>
           <title>AJAN Demo</title>
-          <meta name="description" content="AJAN Demo Website" />
-          <link rel="icon" href="/favicon.ico" />
+          <meta name="description" content="AJAN Demo Website"/>
+          <link rel="icon" href="/favicon.ico"/>
         </Head>
         <div className={styles.info}>
-          {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
+          {workbenchPort != -1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
         </div>
         <img src={"/AJAN-Logo-TW.png"} alt={'ajan-logo'}/>
-        {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
+        {loading ? getLoadingButton() : getUrlButton(load, workbenchPort != -1)}
         <div className={styles.clickableContainer}>
-          {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
-          {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
-          {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
+          {workbenchPort != -1 && env ? getEditorButton(getDemoEditorURL(env, workbenchPort)) : <></>}
+          {workbenchPort != -1 && env ? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) : <></>}
+          {workbenchPort != -1 && env ? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) : <></>}
         </div>
-        {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
+        {(!loading && workbenchPort != -1 && log) && <div className={styles.log}>{log}</div>}
       </div>
     </div>
   );
@@ -147,7 +164,8 @@ function getPacmanURL(env:any, workbench_port:any, storage_port:any) {
   return `${env.BASE_URL}:${env.PACMAN_PORT}/?uri=${env.BASE_URL}:${env.BACKEND_PORT}/api/pacman&workbench_port=${workbench_port}&storage_port=${storage_port}`
 }
 
-function getLoadingButton(){
+
+function getLoadingButton() {
   return <button disabled={true} className={styles.clickable}>Loading...</button>
 }
 

@@ -8,26 +8,14 @@ export default async function handler(
 ) {
 
 
-  const dir = req.body.split(" ")[5];
-  console.log("movement data", dir)
-  //console.log(dir)
-
+  const dir = req.body.split(" ")[2];
   // @ts-ignore
-  let node = global.dirMap.get(req.query.uuid.toString())
-
-  console.log("old", node)
-
+  const uuid = req.query.uuid.toString();
   // @ts-ignore
-  global.dirMap.set(req.query.uuid.toString(), dir)
-
+  global.dirMap.set(uuid, dir)
   // @ts-ignore
-  node = global.dirMap.get(req.query.uuid.toString())
-  console.log("new", node)
+  console.log("setter", global.dirMap.get(uuid))
 
-
-  //res.setHeader('Content-Type', 'application/ld+json')
-
-  // @ts-ignore
   res.status(200).send("");
 
 

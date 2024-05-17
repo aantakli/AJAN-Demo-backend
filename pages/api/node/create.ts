@@ -87,7 +87,7 @@ export default async function handler(
         `repoURL=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}/rdf4j/repositories/`,
         "Dpf4j_mode=development",
         "DloadTTLFiles=true",
-        `DpublicHostName=${BASE_URL}:${(ports[ports.length-1]+1+100).toString()}`
+        `DpublicHostName=${BASE_URL.replace("http://", "")}`
       ],
       HostConfig:
         {
@@ -135,7 +135,6 @@ export default async function handler(
       storage: resPorts.storage,
       containerID: createRes.Id
     }
-    console.log("Sending response with data:", ret)
     res.status(statuscode).json(ret)
     return;
   }

@@ -17,13 +17,27 @@
       left: 15px;
     }
     .log{
-      height: 500px;
-      overflow-y: scroll;
-      width: 90%;
-      margin: 60px auto auto;
       background-color: #D1D6D8;
-      white-space: pre;
+      height: 500px;
+      width: 90%;
+      display: flex;
+      flex-direction: column-reverse;
+      margin: 60px auto auto;
       font-size: 13px;
+      overflow-y: scroll;
+      div{
+        word-break: break-all;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        span:first-child{
+          background-color: #969b9b;
+        }
+      }
+      div:nth-child(even){
+        background-color: #c3c8c9;
+      }
     }
     img{
       padding-top: 10px;
