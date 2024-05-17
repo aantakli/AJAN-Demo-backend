@@ -128,26 +128,24 @@ useEffect(() => {
       <div className={styles.background}>
         <Head>
           <title>AJAN Demo</title>
-          <meta name="description" content="AJAN Demo Website" />
-          <link rel="icon" href="/favicon.ico" />
+          <meta name="description" content="AJAN Demo Website"/>
+          <link rel="icon" href="/favicon.ico"/>
         </Head>
         <div className={styles.info}>
-          {workbenchPort!=-1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
+          {workbenchPort != -1 && env ? `Url: ${getURL(env, workbenchPort)}` : "No URL requested"}
         </div>
         <img src={"/AJAN-Logo-TW.png"} alt={'ajan-logo'}/>
-        {loading? getLoadingButton() : getUrlButton(load, workbenchPort!=-1)}
+        {loading ? getLoadingButton() : getUrlButton(load, workbenchPort != -1)}
         <div className={styles.clickableContainer}>
-          {workbenchPort!=-1 && env? getEditorButton(getDemoEditorURL(env, workbenchPort)) :  <></> }
-          {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
-          {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
+          {workbenchPort != -1 && env ? getEditorButton(getDemoEditorURL(env, workbenchPort)) : <></>}
+          {workbenchPort != -1 && env ? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) : <></>}
+          {workbenchPort != -1 && env ? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) : <></>}
         </div>
-        {(!loading && workbenchPort!=-1 && log) && <div className={styles.log}>{log}</div>}
+        {(!loading && workbenchPort != -1 && log) && <div className={styles.log}>{log}</div>}
       </div>
     </div>
   );
 }
-
-
 
 
 function getURL(env: any, port: any){
