@@ -8,7 +8,7 @@ function Home(){
 
   const [env, setEnv] = useState(null)
   const [log, setLog] = useState("")
-  let [loading, setLoading] = useState(false);
+  let [loading, setLoading] = useState(true);
   const [storagePort, setStoragePort] = useStoragePort();
   const [workbenchPort, setWorkbenchPort] = useWorkbenchPort();
   const [containerID, setContainerID] = useContainerID();
@@ -26,7 +26,6 @@ function Home(){
   }
 
 useEffect(() => {
-  setLoading(false);
   if(!env){
     fetch('/api/getEnv')
       .then((res) => res.json())
@@ -41,6 +40,8 @@ useEffect(() => {
             }
             setLoading(false);
           })
+        } else {
+          setLoading(false);
         }
       })
   }
@@ -125,7 +126,7 @@ useEffect(() => {
           {workbenchPort!=-1 && env? getWorkbenchButton(getWorkbenchURL(env, workbenchPort)) :  <></> }
           {workbenchPort!=-1 && env? getPacmanButton(getPacmanURL(env, workbenchPort, storagePort)) :  <></> }
         </div>
-        {(!loading && workbenchPort!=-1) && <div className={styles.log}>{log}</div>}
+        {(!loading && workbenchPort!=-1 && log != "") && <div className={styles.log}>{log}</div>}
       </div>
     </div>
   );
