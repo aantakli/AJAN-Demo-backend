@@ -32,6 +32,8 @@ export default async function handler(
           "requestURI:updateMovement \"" + BASE_URL + ":" + BACKEND_PORT + "/api/pacman/updateMovement?uuid=" + uuid + "\"^^xsd:string ;\n" +
           "] ."
 
+      console.log(BASE_URL + ":" + STORAGE_PORT + "/ajan/agents/")
+
       await fetch(BASE_URL + ":" + STORAGE_PORT + "/ajan/agents/", {
         method: "POST",
         body: initData,
