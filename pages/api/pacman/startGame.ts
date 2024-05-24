@@ -26,7 +26,7 @@ export default async function handler(
           "@prefix requestURI: <http://pacman.demo/requestURI> \n." +
           "_:initAgent rdf:type ajan:AgentInitialisation ;\n" +
           "\t ajan:agentId \"" + uuid + "\" ;\n" +
-          "\t ajan:agentTemplate <http://localhost:8090/rdf4j/repositories/agents#" + AGENT_UUID + "> ;\n" +
+          "\t ajan:agentTemplate <http://" + BASE_URL + ":" + WORKBENCH_PORT + "/rdf4j/repositories/agents#" + AGENT_UUID + "> ;\n" +
           "ajan:agentInitKnowledge [\n" +
           "requestURI:fetch \"" + BASE_URL  + ":" + BACKEND_PORT + "/api/pacman/fetch?uuid=" + uuid + "\"^^xsd:string ;\n" +
           "requestURI:updateMovement \"" + BASE_URL + ":" + BACKEND_PORT + "/api/pacman/updateMovement?uuid=" + uuid + "\"^^xsd:string ;\n" +
