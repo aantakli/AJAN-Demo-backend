@@ -26,13 +26,12 @@ export default async function handler(
           "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
           "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"+
           "@prefix requestURI: <http://pacman.demo/requestURI> .\n" +
-          "@prefix ajan: <http://pacman.demo/requestURI> .\n" +
           "_:initAgent rdf:type ajan:AgentInitialisation ;\n" +
           "\t ajan:agentId \"" + uuid + "\" ;\n" +
           "\t ajan:agentTemplate <" + BASE_URL + ":" + WORKBENCH_PORT + "/rdf4j/repositories/agents#" + AGENT_UUID + "> ;\n" +
           "ajan:agentInitKnowledge [\n" +
           // ajan:agentReportURI "http://localhost:4202/report"%5E%5Exsd:anyURI ;
-          "ajan:agentReportURI \"" + BASE_URL + ":4202/report\"^^xsd:anyURI;\n" +
+          "ajan:agentReportURI \"" + BASE_URL + ":4202/report\"^^xsd:anyURI ;\n" +
           "requestURI:fetch \"" + BASE_URL  + ":" + BACKEND_PORT + "/api/pacman/fetch?uuid=" + uuid + "\"^^xsd:string ;\n" +
           "requestURI:updateMovement \"" + BASE_URL + ":" + BACKEND_PORT + "/api/pacman/updateMovement?uuid=" + uuid + "\"^^xsd:string ;\n" +
           "] ."
